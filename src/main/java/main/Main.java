@@ -4,9 +4,10 @@
 //End program with "e" or "E"
 package main;
 
+import client.ElectricityPriceClient;
+
 public class Main {
     static void main() {
-
         String choice = "";
         String electricityArea = "";
         String[] validAreas = {"SE1", "SE2", "SE3", "SE4"};
@@ -54,6 +55,8 @@ public class Main {
             }
 
         }
+
+        new ElectricityPriceClient().fetchElectricityPrices();
     }
 
     private static boolean isValidArea(String area, String[] validAreas) {
@@ -64,5 +67,4 @@ public class Main {
         }
         return false;
     }
-
 }
