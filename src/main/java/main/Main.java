@@ -5,9 +5,16 @@
 package main;
 
 import client.ElectricityPriceClient;
+import model.ElectricityPrice;
 
 public class Main {
     static void main() {
+        ElectricityPriceClient client = new ElectricityPriceClient();
+        ElectricityPrice[] prices = client.fetchElectricityPrices();
+
+        for (ElectricityPrice price : prices) {
+            IO.println(price);
+        }
         String choice = "";
         String electricityArea = "";
         String[] validAreas = {"SE1", "SE2", "SE3", "SE4"};
@@ -55,8 +62,6 @@ public class Main {
             }
 
         }
-
-        new ElectricityPriceClient().fetchElectricityPrices();
     }
 
     private static boolean isValidArea(String area, String[] validAreas) {

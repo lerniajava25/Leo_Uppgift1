@@ -1,5 +1,8 @@
 package client;
 
+import model.ElectricityPrice;
+import tools.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -7,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class ElectricityPriceClient {
     //Add  https://www.elprisetjustnu.se/api/v1/prices/{ÅR}/{MÅNAD}-{DAG}_{ELOMRÅDE}.json as parameters
@@ -14,7 +18,7 @@ public class ElectricityPriceClient {
     //To get the correct date for API-endpoint
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    public String fetchElectricityPrices() {
+    public ElectricityPrice[] fetchElectricityPrices() {
         HttpClient httpClient = HttpClient
                 .newBuilder()
                 .version(HttpClient.Version.HTTP_3)
@@ -35,6 +39,9 @@ public class ElectricityPriceClient {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return response.body() + LocalDateTime.now().format(dtf);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ElectricityPrice[] prices = mapper.readValue(response.body(), ElectricityPrice[].class);
+        return prices;
     }
 }
