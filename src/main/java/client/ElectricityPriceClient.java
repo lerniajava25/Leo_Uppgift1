@@ -8,17 +8,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ElectricityPriceClient {
     //Add  https://www.elprisetjustnu.se/api/v1/prices/{ÅR}/{MÅNAD}-{DAG}_{ELOMRÅDE}.json as parameters
-
+    String baseUri = "https://www.elprisetjustnu.se/api/v1/prices/";
     //To get the correct date for API-endpoint
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM-dd");
+    String dateToday = LocalDate.now().format(dtf);
 
-    public ElectricityPrice[] fetchElectricityPrices() {
+
+    public ElectricityPrice[] fetchElectricityPrices(String electricityArea) {
         HttpClient httpClient = HttpClient
                 .newBuilder()
                 .version(HttpClient.Version.HTTP_3)
@@ -27,7 +30,7 @@ public class ElectricityPriceClient {
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
-                .uri(URI.create("https://www.elprisetjustnu.se/api/v1/prices/2026/08-10_SE3.json"))
+                .uri(URI.create(baseUri + dateToday + "_" + electricityArea + ".json"))
                 .build();
 
         HttpResponse<String> response = null;

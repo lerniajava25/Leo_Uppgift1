@@ -10,7 +10,7 @@ import model.ElectricityPrice;
 public class Main {
     static void main() {
         ElectricityPriceClient client = new ElectricityPriceClient();
-        ElectricityPrice[] prices = client.fetchElectricityPrices();
+        ElectricityPrice[] prices = client.fetchElectricityPrices("SE3");
 
         for (ElectricityPrice price : prices) {
             IO.println(price);
@@ -42,7 +42,7 @@ public class Main {
                         IO.println("Ogiltigt område, försök igen!");
                         break;
                     }
-                    electricityArea = tempElectricityArea;
+                    electricityArea = tempElectricityArea.toUpperCase();
                     break;
                 case "2":
                     //Calculate min, max and average
