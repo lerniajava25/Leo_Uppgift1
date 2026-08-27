@@ -2,8 +2,6 @@ package service;
 
 import model.ElectricityPrice;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -73,12 +71,15 @@ public class ElectricityPriceService {
         double cheapestPrice = 0.0;
         int cheapestIndex = 0;
 
+        //implementation of sliding window for cheapest loading time for 4 hour period
+        //Calculating the first 4 hour window
         for (int i = 0; i < windowSize; i++) {
             cheapestPrice += prices[i].SEK_per_kWh();
         }
 
         double currentPrize = cheapestPrice;
 
+        //Removing the oldest price and adding the next to "slide the window"
         for (int i = windowSize; i < prices.length; i++) {
             currentPrize -= prices[i - windowSize].SEK_per_kWh();
             currentPrize += prices[i].SEK_per_kWh();

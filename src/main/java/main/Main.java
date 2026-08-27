@@ -1,7 +1,4 @@
-//API www.elprisetjustnu.se
-//API-ändpunkt: https://www.elprisetjustnu.se/api/v1/prices/{ÅR}/{MÅNAD}-{DAG}_{ELOMRÅDE}.json
-//Exempel: https://www.elprisetjustnu.se/api/v1/prices/2026/08-10_SE3.json
-//End program with "e" or "E"
+
 package main;
 
 import client.ElectricityPriceClient;
@@ -47,14 +44,12 @@ public class Main {
                     priceService.printMinMaxAverage(prices, electricityArea);
                     break;
                 case "3":
-                    //Sort prices
                     IO.println("Dagens priser för område "
                             + electricityArea
                             + " sorterat från lägst till högst:");
                     priceService.sortPrices(prices);
                     break;
                 case "4":
-                    //Find best charging time
                     priceService.findBestChargingTime(prices);
                     break;
                 case "e":

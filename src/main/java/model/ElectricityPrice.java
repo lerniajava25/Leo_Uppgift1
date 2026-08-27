@@ -7,5 +7,5 @@ public record ElectricityPrice(
         double EUR_per_kWh,
         double EXR,
         OffsetDateTime time_start,
-        OffsetDateTime time_end){
+        OffsetDateTime time_end) {
 }
