@@ -14,9 +14,11 @@ import java.time.format.DateTimeFormatter;
 public class ElectricityPriceClient {
     String baseUri = "https://www.elprisetjustnu.se/api/v1/prices/";
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM-dd");
-    String dateToday = LocalDate.now().format(dtf);
 
-    public ElectricityPrice[] fetchElectricityPrices(String electricityArea) {
+    public ElectricityPrice[] fetchElectricityPrices(String electricityArea)
+            throws IOException, InterruptedException {
+        String dateToday = LocalDate.now().format(dtf);
+
         HttpClient httpClient = HttpClient
                 .newBuilder()
                 .version(HttpClient.Version.HTTP_3)
@@ -28,15 +30,9 @@ public class ElectricityPriceClient {
                 .uri(URI.create(baseUri + dateToday + "_" + electricityArea + ".json"))
                 .build();
 
-        HttpResponse<String> response = null;
-
-        try {
-            response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        HttpResponse<String> response = httpClient.send(
+                httpRequest,
+                HttpResponse.BodyHandlers.ofString());
 
         ObjectMapper mapper = new ObjectMapper();
         ElectricityPrice[] prices = mapper.readValue(response.body(), ElectricityPrice[].class);

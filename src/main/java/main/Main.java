@@ -5,6 +5,8 @@ import client.ElectricityPriceClient;
 import model.ElectricityPrice;
 import service.ElectricityPriceService;
 
+import java.io.IOException;
+
 public class Main {
     static void main() {
         ElectricityPriceClient client = new ElectricityPriceClient();
@@ -37,8 +39,15 @@ public class Main {
                         IO.println("Ogiltigt område, försök igen!");
                         break;
                     }
-                    electricityArea = tempElectricityArea.toUpperCase();
-                    prices = client.fetchElectricityPrices(electricityArea);
+                    try {
+                        prices = client.fetchElectricityPrices(tempElectricityArea.toUpperCase());
+                        electricityArea = tempElectricityArea.toUpperCase();
+                    } catch (IOException e) {
+                        IO.println("Kunde inte hämta elpriser. Försök igen.");
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        IO.println("Hämtningen av elpriser avbröts. Försök igen.");
+                    }
                     break;
                 case "2":
                     priceService.printMinMaxAverage(prices, electricityArea);
