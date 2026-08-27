@@ -6,15 +6,13 @@ package main;
 
 import client.ElectricityPriceClient;
 import model.ElectricityPrice;
+import service.ElectricityPriceService;
 
 public class Main {
     static void main() {
         ElectricityPriceClient client = new ElectricityPriceClient();
-        ElectricityPrice[] prices = client.fetchElectricityPrices("SE3");
-
-        for (ElectricityPrice price : prices) {
-            IO.println(price);
-        }
+        ElectricityPriceService priceService = new ElectricityPriceService();
+        ElectricityPrice[] prices = null;
         String choice = "";
         String electricityArea = "";
         String[] validAreas = {"SE1", "SE2", "SE3", "SE4"};
@@ -43,10 +41,10 @@ public class Main {
                         break;
                     }
                     electricityArea = tempElectricityArea.toUpperCase();
+                    prices = client.fetchElectricityPrices(electricityArea);
                     break;
                 case "2":
-                    //Calculate min, max and average
-                    IO.println("min, max, average");
+                    priceService.printMinMaxAverage(prices, electricityArea);
                     break;
                 case "3":
                     //Sort prices
