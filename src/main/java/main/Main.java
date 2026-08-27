@@ -49,12 +49,13 @@ public class Main {
                 case "3":
                     //Sort prices
                     IO.println("Dagens priser för område "
-                            + electricityArea + " " +
-                            "+ sorterat från lägst till högst:");
+                            + electricityArea
+                            + " sorterat från lägst till högst:");
                     priceService.sortPrices(prices);
                     break;
                 case "4":
-                    //Best loading time
+                    //Find best charging time
+                    priceService.findBestChargingTime(prices);
                     break;
                 case "e":
                     break;

@@ -40,12 +40,12 @@ public class ElectricityPriceService {
 
         IO.println("Den lägsta kostnaden per kWh för "
                 + electricityArea + " idag var "
-                + String.format("%.2f", minOre) + " ören.");
+                + String.format("%.2f", minOre) + " öre.");
         IO.println("Den högsta kostnaden per kWh för "
                 + electricityArea + " idag var "
-                + String.format("%.2f", maxOre) + " ören.");
+                + String.format("%.2f", maxOre) + " öre.");
         IO.println("Genomsnittskostnaden var "
-                + String.format("%.2f", averageOre) + " ören");
+                + String.format("%.2f", averageOre) + " öre");
     }
 
     public void sortPrices(ElectricityPrice[] prices) {
@@ -66,5 +66,38 @@ public class ElectricityPriceService {
                     + " | "
                     + String.format("%.2f", (price.SEK_per_kWh()) * 100) + " öre");
         }
+    }
+
+    public void findBestChargingTime(ElectricityPrice[] prices) {
+        int windowSize = 16;
+        double cheapestPrice = 0.0;
+        int cheapestIndex = 0;
+
+        for (int i = 0; i < windowSize; i++) {
+            cheapestPrice += prices[i].SEK_per_kWh();
+        }
+
+        double currentPrize = cheapestPrice;
+
+        for (int i = windowSize; i < prices.length; i++) {
+            currentPrize -= prices[i - windowSize].SEK_per_kWh();
+            currentPrize += prices[i].SEK_per_kWh();
+
+            if (currentPrize < cheapestPrice) {
+                cheapestPrice = currentPrize;
+                cheapestIndex = i - windowSize + 1;
+            }
+        }
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        String startTime = prices[cheapestIndex].time_start().format(dtf);
+        String endTime = prices[cheapestIndex + windowSize - 1].time_end().format(dtf);
+        double averagePriceOre = (cheapestPrice / windowSize) * 100;
+
+        IO.println("Bästa sammanhängande laddningstiden: "
+                + startTime + "-" + endTime
+                + " |" + " " + "Genomsnittspris: "
+                + String.format("%.2f", averagePriceOre) + " öre/kWh"
+        );
     }
 }
