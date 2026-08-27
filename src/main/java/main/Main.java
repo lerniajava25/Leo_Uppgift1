@@ -1,12 +1,17 @@
-//API www.elprisetjustnu.se
-//API-ändpunkt: https://www.elprisetjustnu.se/api/v1/prices/{ÅR}/{MÅNAD}-{DAG}_{ELOMRÅDE}.json
-//Exempel: https://www.elprisetjustnu.se/api/v1/prices/2026/08-10_SE3.json
-//End program with "e" or "E"
+
 package main;
+
+import client.ElectricityPriceClient;
+import model.ElectricityPrice;
+import service.ElectricityPriceService;
+
+import java.io.IOException;
 
 public class Main {
     static void main() {
-
+        ElectricityPriceClient client = new ElectricityPriceClient();
+        ElectricityPriceService priceService = new ElectricityPriceService();
+        ElectricityPrice[] prices = null;
         String choice = "";
         String electricityArea = "";
         String[] validAreas = {"SE1", "SE2", "SE3", "SE4"};
@@ -34,17 +39,27 @@ public class Main {
                         IO.println("Ogiltigt område, försök igen!");
                         break;
                     }
-                    electricityArea = tempElectricityArea;
+                    try {
+                        prices = client.fetchElectricityPrices(tempElectricityArea.toUpperCase());
+                        electricityArea = tempElectricityArea.toUpperCase();
+                    } catch (IOException e) {
+                        IO.println("Kunde inte hämta elpriser. Försök igen.");
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        IO.println("Hämtningen av elpriser avbröts. Försök igen.");
+                    }
                     break;
                 case "2":
-                    //Calculate min, max and average
-                    IO.println("min, max, average");
+                    priceService.printMinMaxAverage(prices, electricityArea);
                     break;
                 case "3":
-                    //Sort prices
+                    IO.println("Dagens priser för område "
+                            + electricityArea
+                            + " sorterat från lägst till högst:");
+                    priceService.sortPrices(prices);
                     break;
                 case "4":
-                    //Best loading time
+                    priceService.findBestChargingTime(prices);
                     break;
                 case "e":
                     break;
@@ -64,5 +79,4 @@ public class Main {
         }
         return false;
     }
-
 }
